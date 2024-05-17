@@ -241,9 +241,7 @@ class DetectionTransform(nn.Module):
 def get_transformsimple(train):
     transforms = []
     transforms.append(T.PILToTensor())
-    transforms.append(T.ToDtype(torch.float, scale=True))
-    # if train:
-    #     transforms.append(RandomHorizontalFlip(0.5))
+    transforms.append(T.ConvertImageDtype(torch.float)))
     return T.Compose(transforms)
 
 def test_imagetransform(images, target, image_mean=[0.485, 0.456, 0.406], image_std=[0.229, 0.224, 0.225]):
