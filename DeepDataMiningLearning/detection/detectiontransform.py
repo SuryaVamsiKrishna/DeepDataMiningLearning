@@ -242,6 +242,7 @@ def get_transformsimple(train):
     transforms = []
     transforms.append(T.PILToTensor())
     transforms.append(T.ConvertImageDtype(torch.float)))
+    transforms.append(T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]))
     return T.Compose(transforms)
 
 def test_imagetransform(images, target, image_mean=[0.485, 0.456, 0.406], image_std=[0.229, 0.224, 0.225]):
