@@ -162,20 +162,21 @@ if __name__ == "__main__":
     print([(k, v.shape) for k, v in output.items()])
     #[('0', torch.Size([1, 256, 16, 16])), ('1', torch.Size([1, 256, 8, 8])), ('2', torch.Size([1, 256, 4, 4])), ('3', torch.Size([1, 256, 2, 2])), ('pool', torch.Size([1, 256, 1, 1]))]
 
-def get_resnet_fasterrcnn(num_classes):
-    backbone = torchvision.models.resnet50(pretrained=True)
-    backbone = torchvision.models._utils.IntermediateLayerGetter(backbone, return_layers={'layer4': '0'})
-    backbone.out_channels = 2048
+
+def get_vgg_fasterrcnn(num_classes):
+    backbone = torchvision.models.vgg16(pretrained=True).features
+    backbone.out_channels = 512  
     anchor_generator = AnchorGenerator(
         sizes=((32, 64, 128, 256, 512),),
         aspect_ratios=((0.5, 1.0, 2.0),) * 5
     )
 
     roi_pooler = torchvision.ops.MultiScaleRoIAlign(
-        featmap_names=['0'],
+        featmap_names=['0'],  # Use the only feature map available
         output_size=7,
         sampling_ratio=2
     )
+
     model = FasterRCNN(
         backbone,
         num_classes=num_classes,
@@ -184,3 +185,4 @@ def get_resnet_fasterrcnn(num_classes):
     )
     
     return model
+
